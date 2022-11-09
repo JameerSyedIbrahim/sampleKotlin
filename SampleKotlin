@@ -1,0 +1,261 @@
+package com.zoho.people.activities.util
+
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.zoho.people.R
+import com.zoho.people.activities.util.automationutil.extensions.ViewInteractionExt.isDisplayed
+import io.github.kakaocup.kakao.edit.KEditText
+import io.github.kakaocup.kakao.image.KImageView
+import io.github.kakaocup.kakao.picker.date.KDatePickerDialog
+import io.github.kakaocup.kakao.picker.time.KTimePickerDialog
+import io.github.kakaocup.kakao.recycler.KRecyclerItem
+import io.github.kakaocup.kakao.recycler.KRecyclerView
+import io.github.kakaocup.kakao.screen.Screen
+import io.github.kakaocup.kakao.text.KButton
+import io.github.kakaocup.kakao.text.KTextView
+import org.hamcrest.Matcher
+import org.junit.Test
+
+class homeScreen : AppSetup() {
+
+    @Test
+    fun devForm() {
+
+        SampleScreenKakao.samplebtn.click()
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(9) {
+                click()
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(3) {
+                click()
+            }
+        }
+
+        SampleScreenKakao.addBtn.click()
+
+        // singleline field
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(1) {
+                click()
+                singleLine.replaceText("hello")
+            }
+        }
+
+        // multiline field
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(2) {
+                click()
+                multiLine.replaceText("Muliti line field is uesd for writting multiple lines in the multiline field.")
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(3) {
+                click()
+                emailId.replaceText("maya@testjambav.com")
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(4) {
+                click()
+                number.replaceText("123")
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(5) {
+                click()
+                currency.replaceText("1000")
+            }
+        }
+
+        // drop down
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(6) {
+                click()
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(1) {
+                click()
+                SampleScreenKakao.doneBtn.click()
+            }
+        }
+
+        // blood group
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(7) {
+                click()
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(4) {
+                click()
+                SampleScreenKakao.doneBtn.click()
+            }
+        }
+
+        // phone
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(8) {
+                click()
+                phone.typeText("1234567890")
+            }
+        }
+
+        // select date
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(9) {
+                date.click()
+            }
+        }
+        KDatePickerDialog().datePicker.setDate(2022, 10, 23)
+        KDatePickerDialog().okButton.click()
+
+        // select date and time
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(10) {
+                dateTime.click()
+            }
+        }
+        KDatePickerDialog().datePicker.setDate(2022, 10, 25)
+        KDatePickerDialog().okButton.click()
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(10) {
+                time.click()
+            }
+        }
+
+        KTimePickerDialog().timePicker.setTime(21, 30)
+        KTimePickerDialog().okButton.click()
+
+        // url
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(11) {
+                click()
+                url.typeText("www.google.com")
+            }
+        }
+
+        // male radio button
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(12) {
+                maleRadioButton.click()
+            }
+        }
+
+        // decimal
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(13) {
+                // click()
+                decimal.replaceText("123.98")
+            }
+        }
+
+        // country
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(16) {
+                click()
+            }
+        }
+
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(112) {
+                click()
+                SampleScreenKakao.doneBtn.click()
+            }
+        }
+
+        // dicision box
+        SampleScreenKakao.RecyclerView {
+            childAt<RecyclerViewItem>(17) {
+                click()
+            }
+        }
+
+        SampleScreenKakao.sumbitButton.click()
+        loading(2)
+    }
+
+    @Test
+    fun viewprofile() {
+
+        SampleScreenKakao.profile.isVisible()
+        onView(withId(R.id.bt_menu_services)).perform(click())
+    }
+}
+
+object SampleScreenKakao : Screen<SampleScreenKakao>() {
+    val samplebtn = KButton { withId(R.id.bt_menu_services); withContentDescription("SERVICES") }
+
+    val RecyclerView = KRecyclerView(
+        builder = { withId(R.id.recycler_view) ; isDisplayed() },
+        itemTypeBuilder = { itemType(::RecyclerViewItem) }
+    )
+
+    val addBtn = KButton { withId(R.id.fab_add_button) }
+
+    val doneBtn = KButton { withId(R.id.done_button) }
+
+    val sumbitButton = KButton { withId(R.id.approve_record_button) }
+
+    // profile in home page
+    val profile = KImageView { withId(R.id.toolbar_profile_image) }
+}
+
+class RecyclerViewItem(parent: Matcher<View>) : KRecyclerItem<RecyclerViewItem>(parent) {
+
+    val img = KImageView(parent) { withId(R.id.fabItem) }
+
+    val title = KTextView(parent) { withId(R.id.textContent) }
+
+    val devForm = KTextView(parent) { withId(R.id.nameTextView) }
+
+    val singleLine = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Single_Line") }
+
+    val multiLine = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Multi_Line") }
+
+    val emailId = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Email_ID") }
+
+    val number = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Number") }
+
+    val currency = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Currency") }
+
+    val dropdown = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Dropdown") }
+
+    // phone
+    val phone = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Phone") }
+
+    // url
+    val url = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Url") }
+
+    // Radio button
+    val maleRadioButton = KButton(parent) { withId(R.id.maleRadioButton) }
+
+    // decimal
+    val decimal = KEditText(parent) { withId(R.id.valueTextView); withContentDescription("Decimal") }
+
+    // date
+    val date = KButton(parent) { withId(R.id.selectDateButton); withContentDescription("Date") }
+
+    // date time
+    val dateTime = KButton(parent) { withId(R.id.selectDateButton); withContentDescription("Date_Time") }
+    val time = KButton(parent) { withId(R.id.selectTimeButton) ; withContentDescription("Date_Time") }
+}
